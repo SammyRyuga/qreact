@@ -1,0 +1,251 @@
+.problem-statement {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+
+  padding: 120px 0 135px;
+
+  border-top: 1px solid var(--border);
+}
+
+.problem-header {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 80px;
+  align-items: end;
+
+  margin-bottom: 65px;
+}
+
+.problem-header h2 {
+  margin: 0;
+
+  font-family: var(--font-display);
+  font-size: clamp(38px, 4.4vw, 66px);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  font-weight: 500;
+}
+
+.problem-header h2 span {
+  background: linear-gradient(
+    90deg,
+    var(--violet-soft),
+    var(--magenta),
+    var(--orange)
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.problem-header > p {
+  max-width: 500px;
+  margin: 0;
+
+  color: var(--text-soft);
+
+  font-family: var(--font-editorial);
+  font-size: 15px;
+  line-height: 1.85;
+}
+
+.problem-contrast {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+
+  background: var(--border);
+
+  border: 1px solid var(--border);
+}
+
+.problem-card {
+  min-height: 355px;
+
+  padding: 28px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.018),
+      rgba(255, 255, 255, 0.006)
+    ),
+    var(--bg);
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.problem-card:hover {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(139, 92, 246, 0.045),
+      rgba(236, 72, 153, 0.018)
+    ),
+    var(--bg);
+}
+
+.problem-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  color: var(--text-muted);
+}
+
+.problem-index {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+}
+
+.problem-card-content {
+  margin-top: 72px;
+}
+
+.problem-label {
+  margin-bottom: 13px;
+
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+}
+
+.conventional .problem-label {
+  color: var(--orange);
+}
+
+.proposed .problem-label {
+  color: var(--mint);
+}
+
+.problem-card h3 {
+  margin: 0;
+
+  font-family: var(--font-display);
+  font-size: clamp(25px, 2.3vw, 37px);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  font-weight: 500;
+}
+
+.problem-flow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-top: 35px;
+
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.09em;
+  color: var(--text-muted);
+}
+
+.conventional .problem-flow svg {
+  color: var(--orange);
+}
+
+.proposed .problem-flow svg {
+  color: var(--mint);
+}
+
+.problem-card-content > p {
+  max-width: 470px;
+
+  margin: 25px 0 0;
+
+  color: var(--text-muted);
+
+  font-family: var(--font-editorial);
+  font-size: 12px;
+  line-height: 1.75;
+}
+
+.proposed {
+  position: relative;
+  overflow: hidden;
+}
+
+.proposed::before {
+  content: "";
+
+  position: absolute;
+
+  width: 260px;
+  height: 260px;
+
+  right: -100px;
+  bottom: -120px;
+
+  border-radius: 50%;
+
+  background: radial-gradient(
+    circle,
+    rgba(110, 231, 183, 0.08),
+    transparent 65%
+  );
+
+  filter: blur(15px);
+
+  pointer-events: none;
+}
+
+.problem-footnote {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  margin-top: 25px;
+
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+
+  color: var(--text-muted);
+}
+
+.problem-footnote-dot {
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+
+  background: var(--mint);
+
+  box-shadow: 0 0 9px rgba(110, 231, 183, 0.8);
+}
+
+@media (max-width: 900px) {
+  .problem-header {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .problem-contrast {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .problem-statement {
+    padding: 90px 0 105px;
+  }
+
+  .problem-card {
+    min-height: 300px;
+    padding: 22px;
+  }
+
+  .problem-card-content {
+    margin-top: 55px;
+  }
+
+  .problem-flow {
+    flex-wrap: wrap;
+  }
+}

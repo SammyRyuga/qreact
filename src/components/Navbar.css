@@ -1,0 +1,178 @@
+.navbar {
+  height: 86px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  flex-shrink: 0;
+}
+
+.brand-mark {
+  position: relative;
+  width: 30px;
+  height: 30px;
+}
+
+.brand-mark span {
+  position: absolute;
+
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: var(--violet-soft);
+
+  box-shadow: 0 0 16px rgba(139, 92, 246, 0.8);
+}
+
+.brand-mark span:nth-child(1) {
+  left: 2px;
+  top: 12px;
+}
+
+.brand-mark span:nth-child(2) {
+  left: 12px;
+  top: 3px;
+
+  background: var(--magenta);
+
+  box-shadow: 0 0 16px rgba(236, 72, 153, 0.8);
+}
+
+.brand-mark span:nth-child(3) {
+  right: 1px;
+  bottom: 2px;
+
+  background: var(--mint);
+
+  box-shadow: 0 0 16px rgba(110, 231, 183, 0.7);
+}
+
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.brand-subtitle {
+  margin-top: 3px;
+
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+
+  color: var(--text-muted);
+}
+
+.nav-center {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.nav-link {
+  position: relative;
+
+  padding: 8px 0;
+
+  color: var(--text-muted);
+
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.nav-link::after {
+  content: "";
+
+  position: absolute;
+  left: 0;
+  bottom: 0;
+
+  width: 0;
+  height: 1px;
+
+  background: linear-gradient(
+    90deg,
+    var(--violet-soft),
+    var(--magenta)
+  );
+
+  transition: width 0.25s ease;
+}
+
+.nav-link:hover {
+  color: var(--text);
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.nav-status {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+
+  color: var(--text-muted);
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.status-online {
+  color: var(--mint);
+}
+
+@media (max-width: 1050px) {
+  .nav-center {
+    gap: 18px;
+  }
+
+  .nav-status {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 850px) {
+  .nav-center {
+    display: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .navbar {
+    height: 72px;
+  }
+
+  .status-item span {
+    display: none;
+  }
+}

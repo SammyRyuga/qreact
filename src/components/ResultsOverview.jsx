@@ -57,7 +57,7 @@ function ResultsOverview() {
     <section className="results-overview">
       <div className="results-header">
         <div>
-          <div className="section-kicker">EXPERIMENT RESULTS</div>
+          <div className="section-kicker" style={{marginBottom: '10px'}}>EXPERIMENT RESULTS</div>
 
           <h2>Strategy comparison.</h2>
         </div>

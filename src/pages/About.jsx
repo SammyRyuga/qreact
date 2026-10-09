@@ -88,7 +88,7 @@ function About() {
         </div>
       </section>
 
-      <section className="about-section about-section-alt">
+      <section className="about-section">
         <div className="about-section-label">
           <span>02</span>
           <span>THE APPROACH</span>
@@ -242,7 +242,7 @@ function About() {
       </section>
 
       <section className="about-footer">
-        <div>
+        <div style={{marginBottom: '35px'}}>
           <span className="about-footer-kicker">Q//REACT</span>
           <p>
             An experimental compiler architecture for reacting to changing

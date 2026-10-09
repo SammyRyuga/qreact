@@ -12,7 +12,7 @@ function RepairDecision() {
     <section className="repair-decision">
       <div className="repair-header">
         <div>
-          <div className="section-kicker">LOCAL REPAIR ANALYSIS</div>
+          <div className="section-kicker" style={{marginBottom: '10px'}}>LOCAL REPAIR ANALYSIS</div>
 
           <h2>Patch verification.</h2>
         </div>

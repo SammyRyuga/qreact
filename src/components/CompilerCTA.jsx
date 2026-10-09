@@ -13,7 +13,7 @@ function CompilerCTA() {
 
         <div className="cta-content">
           <div>
-            <div className="section-kicker">RUN THE SYSTEM</div>
+            <div className="section-kicker" style={{marginBottom: '15px'}}>RUN THE SYSTEM</div>
 
             <h2>
               Compile against

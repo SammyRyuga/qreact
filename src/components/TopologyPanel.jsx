@@ -68,7 +68,7 @@ function TopologyPanel() {
     <section className="topology-panel">
       <div className="topology-header">
         <div>
-          <div className="section-kicker">HARDWARE STATE</div>
+          <div className="section-kicker" style={{marginBottom: '10px'}}>HARDWARE STATE</div>
 
           <h2>Physical topology</h2>
         </div>

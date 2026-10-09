@@ -13,7 +13,7 @@ function DashboardHeader() {
 
         <div className="dashboard-title-row">
           <div>
-            <div className="section-kicker">INTERACTIVE COMPILER</div>
+            <div className="section-kicker" style={{marginBottom: '15px'}}>INTERACTIVE COMPILER</div>
 
             <h1>Compiler Dashboard</h1>
           </div>

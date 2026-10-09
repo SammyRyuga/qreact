@@ -6,7 +6,7 @@ function ProblemStatement() {
     <section className="problem-statement">
       <div className="problem-header">
         <div>
-          <div className="section-kicker">WHY THIS EXISTS</div>
+          <div className="section-kicker" style={{marginBottom: '15px'}}>WHY THIS EXISTS</div>
 
           <h2>
             A local hardware problem

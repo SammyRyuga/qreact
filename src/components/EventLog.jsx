@@ -39,7 +39,7 @@ function EventLog() {
     <section className="event-log">
       <div className="event-log-header">
         <div>
-          <div className="section-kicker">EVENT STREAM</div>
+          <div className="section-kicker" style={{marginBottom: '10px'}}>EVENT STREAM</div>
 
           <h2>Compiler activity</h2>
         </div>

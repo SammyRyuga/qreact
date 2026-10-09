@@ -41,7 +41,7 @@ function MethodFlow() {
     <section id="method" className="method-flow">
       <div className="method-header">
         <div>
-          <div className="section-kicker">THE CORE IDEA</div>
+          <div className="section-kicker" style={{marginBottom: '15px'}}>THE CORE IDEA</div>
 
           <h2>
             Repair what drifted.

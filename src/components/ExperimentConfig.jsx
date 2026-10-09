@@ -6,7 +6,7 @@ function ExperimentConfig() {
     <section className="experiment-config">
       <div className="experiment-config-header">
         <div>
-          <div className="section-kicker">EXPERIMENT CONFIGURATION</div>
+          <div className="section-kicker" style={{marginBottom: '10px'}}>EXPERIMENT CONFIGURATION</div>
 
           <h2>Configure the compiler run.</h2>
         </div>

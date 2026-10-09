@@ -51,7 +51,7 @@ function CircuitComparison() {
     <section className="circuit-comparison">
       <div className="circuit-header">
         <div>
-          <div className="section-kicker">CIRCUIT DELTA</div>
+          <div className="section-kicker" style={{marginBottom: '10px'}}>CIRCUIT DELTA</div>
 
           <h2>Before and after the repair.</h2>
         </div>

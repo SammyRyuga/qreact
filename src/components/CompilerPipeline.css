@@ -2,7 +2,6 @@
   width: 100%;
   max-width: 1500px;
   margin: 0 auto;
-
   padding: 38px 42px;
 
   border: 1px solid var(--border);
@@ -16,15 +15,15 @@
     rgba(255, 255, 255, 0.01);
 }
 
+/* Header */
+
 .pipeline-header {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-
   gap: 30px;
 
   padding-bottom: 28px;
-
   border-bottom: 1px solid var(--border);
 }
 
@@ -33,7 +32,7 @@
 
   font-family: var(--font-display);
   font-size: 30px;
-  line-height: 1;
+  line-height: 1.15;
   letter-spacing: -0.04em;
   font-weight: 500;
 }
@@ -44,73 +43,54 @@
   gap: 8px;
 
   padding: 8px 10px;
-
   border: 1px solid var(--border);
 
   color: var(--text-muted);
-
   font-family: var(--font-mono);
   font-size: 8px;
   letter-spacing: 0.1em;
-
   white-space: nowrap;
 }
 
 .pipeline-state-dot {
   width: 5px;
   height: 5px;
+  flex: 0 0 auto;
 
   border-radius: 50%;
-
   background: var(--violet-soft);
-
   box-shadow: 0 0 8px rgba(167, 139, 250, 0.75);
 }
 
-/* =========================================================
-   PIPELINE
-   ========================================================= */
+/* Pipeline layout */
 
 .pipeline-track {
   display: grid;
-
-  grid-template-columns:
-    minmax(0, 1fr)
-    42px
-    minmax(0, 1fr)
-    42px
-    minmax(0, 1fr)
-    42px
-    minmax(0, 1fr)
-    42px
-    minmax(0, 1fr)
-    42px
-    minmax(0, 1fr);
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 18px;
 
   align-items: stretch;
-
   margin-top: 34px;
 }
 
 .pipeline-stage-slot {
   position: relative;
-
+  display: block;
   min-width: 0;
-
-  display: contents;
 }
 
-/* =========================================================
-   STAGE
-   ========================================================= */
+/* Stage cards */
 
 .pipeline-stage {
   position: relative;
+  display: flex;
+  flex-direction: column;
 
-  min-height: 175px;
+  width: 100%;
+  min-width: 0;
+  min-height: 225px;
 
-  padding: 20px;
-
+  padding: 20px 17px 52px;
   border: 1px solid var(--border);
 
   background: rgba(255, 255, 255, 0.012);
@@ -125,7 +105,7 @@
 }
 
 .pipeline-stage.pending {
-  opacity: 0.42;
+  opacity: 0.5;
 }
 
 .pipeline-stage.active {
@@ -142,9 +122,21 @@
   border-color: rgba(236, 72, 153, 0.28);
 }
 
+.pipeline-stage.failed {
+  opacity: 1;
+  border-color: rgba(249, 115, 22, 0.3);
+
+  background:
+    radial-gradient(
+      circle at 50% 20%,
+      rgba(249, 115, 22, 0.045),
+      transparent 45%
+    ),
+    rgba(255, 255, 255, 0.012);
+}
+
 .pipeline-stage.active .pipeline-icon {
   color: var(--orange);
-
   border-color: rgba(249, 115, 22, 0.3);
 
   box-shadow:
@@ -156,107 +148,126 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  gap: 8px;
 }
 
 .pipeline-stage-marker > span {
+  padding-top: 3px;
+
+  color: var(--text-muted);
   font-family: var(--font-mono);
   font-size: 8px;
   letter-spacing: 0.1em;
-
-  color: var(--text-muted);
 }
 
 .pipeline-icon {
-  width: 31px;
-  height: 31px;
-
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border: 1px solid var(--border);
+  width: 31px;
+  height: 31px;
+  flex: 0 0 auto;
 
+  border: 1px solid var(--border);
   color: var(--violet-soft);
 }
 
 .pipeline-stage.complete .pipeline-icon {
   color: var(--mint);
-
   border-color: rgba(110, 231, 183, 0.18);
 }
 
+.pipeline-stage.failed .pipeline-icon {
+  color: var(--orange);
+  border-color: rgba(249, 115, 22, 0.3);
+}
+
+/* Dynamic text gets room to wrap */
+
 .pipeline-stage-content {
-  margin-top: 38px;
+  min-width: 0;
+  margin-top: 24px;
 }
 
 .pipeline-stage-content h3 {
   margin: 0;
 
   font-family: var(--font-display);
-  font-size: 14px;
+  font-size: 13px;
+  line-height: 1.35;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.035em;
+
+  overflow-wrap: anywhere;
 }
 
 .pipeline-stage-content p {
-  max-width: 170px;
-
+  max-width: none;
   margin: 9px 0 0;
 
   color: var(--text-muted);
-
   font-family: var(--font-editorial);
   font-size: 10px;
-  line-height: 1.6;
+  line-height: 1.65;
+
+  overflow-wrap: anywhere;
 }
+
+/* Completion marker stays in its reserved footer space */
 
 .pipeline-check {
   position: absolute;
-
-  left: 20px;
-  bottom: 18px;
-
-  width: 19px;
-  height: 19px;
+  left: 17px;
+  bottom: 16px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
+  width: 20px;
+  height: 20px;
+
   border-radius: 50%;
-
   background: rgba(110, 231, 183, 0.08);
-
   color: var(--mint);
 }
 
-/* =========================================================
-   CONNECTORS
-   ========================================================= */
+.pipeline-stage.failed .pipeline-check {
+  background: rgba(249, 115, 22, 0.08);
+  color: var(--orange);
+}
+
+/* Connectors */
 
 .pipeline-connector {
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 100%;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 18px;
+  height: 8px;
 
-  min-width: 0;
+  transform: translateY(-50%);
+  z-index: 5;
+  pointer-events: none;
 }
 
 .pipeline-connector::before {
   content: "";
+  position: absolute;
+  left: 0;
+  right: 3px;
+  top: 50%;
 
-  width: 100%;
   height: 1px;
-
   background: var(--border-strong);
 }
 
 .pipeline-connector span {
   position: absolute;
-
-  right: -1px;
+  right: 1px;
+  top: 50%;
 
   width: 6px;
   height: 6px;
@@ -264,12 +275,10 @@
   border-top: 1px solid var(--text-muted);
   border-right: 1px solid var(--text-muted);
 
-  transform: rotate(45deg);
+  transform: translateY(-50%) rotate(45deg);
 }
 
-/* =========================================================
-   FINAL DECISION
-   ========================================================= */
+/* Final decision */
 
 .pipeline-result {
   display: flex;
@@ -280,81 +289,64 @@
   padding: 15px 17px;
 
   border: 1px solid var(--border);
-
   background: rgba(255, 255, 255, 0.01);
 }
 
 .pipeline-result-icon {
-  width: 32px;
-  height: 32px;
-
   display: flex;
   align-items: center;
   justify-content: center;
 
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+
   border: 1px solid rgba(110, 231, 183, 0.16);
-
   color: var(--mint);
-
   background: rgba(110, 231, 183, 0.02);
 }
 
-.pipeline-result div:last-child {
+.pipeline-result > div:last-child {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
+  min-width: 0;
 }
 
 .pipeline-result span {
+  color: var(--text-muted);
   font-family: var(--font-mono);
   font-size: 8px;
   letter-spacing: 0.12em;
-
-  color: var(--text-muted);
 }
 
 .pipeline-result strong {
+  color: var(--text-soft);
   font-family: var(--font-editorial);
   font-size: 12px;
+  line-height: 1.6;
   font-weight: 500;
-
-  color: var(--text-soft);
+  overflow-wrap: anywhere;
 }
 
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
+/* Tablet: two rows of three stages */
 
 @media (max-width: 1150px) {
   .pipeline-track {
-    display: grid;
-
-    grid-template-columns:
-      minmax(0, 1fr)
-      34px
-      minmax(0, 1fr)
-      34px
-      minmax(0, 1fr);
-
-    row-gap: 1px;
-
-    background: var(--border);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
   }
 
-  .pipeline-stage:nth-of-type(4),
-  .pipeline-stage:nth-of-type(5),
-  .pipeline-stage:nth-of-type(6) {
-    margin-top: 1px;
+  .pipeline-stage {
+    min-height: 215px;
   }
 
   .pipeline-connector {
     display: none;
   }
-
-  .pipeline-stage {
-    background: var(--bg);
-  }
 }
+
+/* Mobile: one stage per row */
 
 @media (max-width: 700px) {
   .compiler-pipeline {
@@ -364,25 +356,33 @@
   .pipeline-header {
     flex-direction: column;
     align-items: flex-start;
+    gap: 18px;
+  }
+
+  .pipeline-header h2 {
+    font-size: 26px;
   }
 
   .pipeline-track {
-    display: grid;
-
-    grid-template-columns: 1fr;
-
-    gap: 1px;
-
-    background: var(--border);
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    margin-top: 24px;
   }
 
   .pipeline-stage {
-    min-height: 145px;
+    min-height: 155px;
+    padding: 18px 17px 48px;
+  }
 
-    border: none;
+  .pipeline-stage-content {
+    margin-top: 19px;
   }
 
   .pipeline-connector {
     display: none;
+  }
+
+  .pipeline-result {
+    align-items: flex-start;
   }
 }

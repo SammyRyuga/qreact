@@ -12,30 +12,29 @@ const strategies = [
     id: "static",
     name: "STATIC",
     label: "NO REACTION",
-    fidelity: "0.9964",
-    cost: "32.0",
-    gini: "0.5000",
     icon: Layers3,
   },
   {
     id: "full",
     name: "FULL",
     label: "RETRANSPILE",
-    fidelity: "0.9961",
-    cost: "339.2",
-    gini: "0.1370",
     icon: Activity,
   },
   {
     id: "incremental",
     name: "INCREMENTAL",
     label: "Q//REACT",
-    fidelity: "0.9963",
-    cost: "312.8",
-    gini: "0.1240",
     icon: ShieldCheck,
   },
 ]
+
+function formatMetric(value, digits = 4) {
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    return "—"
+  }
+
+  return value.toFixed(digits)
+}
 
 function Metric({ icon: Icon, label, value }) {
   return (
@@ -52,19 +51,31 @@ function Metric({ icon: Icon, label, value }) {
   )
 }
 
-function ResultsOverview() {
+function ResultsOverview({ result }) {
+  const summary = result?.ok ? result.summary : null
+  const hasResults = Boolean(
+    summary?.static &&
+    summary?.full &&
+    summary?.incremental
+  )
+
   return (
     <section className="results-overview">
       <div className="results-header">
         <div>
-          <div className="section-kicker" style={{marginBottom: '10px'}}>EXPERIMENT RESULTS</div>
+          <div
+            className="section-kicker"
+            style={{ marginBottom: "10px" }}
+          >
+            EXPERIMENT RESULTS
+          </div>
 
           <h2>Strategy comparison.</h2>
         </div>
 
         <div className="results-context">
           <BarChart3 size={14} />
-          <span>MEASURED OUTPUT</span>
+          <span>{hasResults ? "LIVE RUN OUTPUT" : "AWAITING RUN"}</span>
         </div>
       </div>
 
@@ -72,6 +83,7 @@ function ResultsOverview() {
         {strategies.map((strategy) => {
           const Icon = strategy.icon
           const isIncremental = strategy.id === "incremental"
+          const metrics = summary?.[strategy.id]
 
           return (
             <article
@@ -95,19 +107,19 @@ function ResultsOverview() {
                 <Metric
                   icon={Gauge}
                   label="MEAN FIDELITY"
-                  value={strategy.fidelity}
+                  value={formatMetric(metrics?.mean_fidelity)}
                 />
 
                 <Metric
                   icon={Activity}
                   label="TOTAL RECOMPUTE COST"
-                  value={strategy.cost}
+                  value={formatMetric(metrics?.total_cost, 1)}
                 />
 
                 <Metric
                   icon={Layers3}
-                  label="Gini / USAGE"
-                  value={strategy.gini}
+                  label="GINI / USAGE"
+                  value={formatMetric(metrics?.gini_usage)}
                 />
               </div>
             </article>
@@ -119,8 +131,9 @@ function ResultsOverview() {
         <span className="results-note-dot"></span>
 
         <span>
-          Lower recomputation cost and lower usage concentration indicate
-          less global disruption.
+          {hasResults
+            ? "Metrics are computed from this experiment. Recompilation cost is measured in modeled compiler work units, not wall-clock time."
+            : "Run an experiment to populate these cards with actual backend results."}
         </span>
       </div>
     </section>

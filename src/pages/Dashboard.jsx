@@ -6,27 +6,28 @@ import RepairDecision from "../components/RepairDecision"
 import EventLog from "../components/EventLog"
 import ResultsOverview from "../components/ResultsOverview"
 import CircuitComparison from "../components/CircuitComparison"
+
 import "./Dashboard.css"
 
-function Dashboard() {
+function Dashboard({ result, setResult }) {
   return (
     <main className="dashboard-page">
       <DashboardHeader />
 
       <section className="dashboard-content">
-        <ExperimentConfig />
+        <ExperimentConfig onResult={setResult} />
 
-        <TopologyPanel />
+        <TopologyPanel result={result} />
 
-        <CompilerPipeline />
+        <CompilerPipeline result={result} />
 
-        <RepairDecision />
+        <RepairDecision result={result} />
 
-        <EventLog />
+        <EventLog result={result} />
 
-        <ResultsOverview />
+        <ResultsOverview result={result} />
 
-        <CircuitComparison />
+        <CircuitComparison result={result} />
       </section>
     </main>
   )

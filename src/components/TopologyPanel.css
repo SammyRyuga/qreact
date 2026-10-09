@@ -126,23 +126,26 @@
   );
 }
 
-.topology-edge {
+.topology-edges {
   position: absolute;
-
-  height: 1px;
-
-  transform-origin: left center;
-
-  background: linear-gradient(
-    90deg,
-    rgba(139, 92, 246, 0.06),
-    rgba(167, 139, 250, 0.34),
-    rgba(236, 72, 153, 0.08)
-  );
-
-  box-shadow: 0 0 9px rgba(139, 92, 246, 0.08);
-
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   z-index: 1;
+  pointer-events: none;
+}
+
+.topology-edge-line {
+  stroke: rgba(167, 139, 250, 0.65);
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+}
+
+.topology-edge-line.drifted {
+  stroke: var(--orange);
+  stroke-width: 1.2;
+  filter: drop-shadow(0 0 2px rgba(249, 115, 22, 0.55));
 }
 
 .topology-node {
@@ -158,6 +161,24 @@
   justify-content: center;
 
   z-index: 4;
+}
+
+.topology-node.in-region::before {
+  content: "";
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(236, 72, 153, 0.55);
+  border-radius: 50%;
+  background: rgba(236, 72, 153, 0.035);
+  box-shadow: 0 0 15px rgba(236, 72, 153, 0.08);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.topology-node.region .topology-node-core {
+  background: #c4b5fd;
+  box-shadow: 0 0 10px rgba(196, 181, 253, 0.6);
 }
 
 .topology-node-core {
@@ -217,52 +238,20 @@
   background: rgba(236, 72, 153, 0.18);
 }
 
-.affected-region {
-  position: absolute;
-
-  left: 39%;
-  top: 30%;
-
-  width: 210px;
-  height: 210px;
-
-  border: 1px solid rgba(236, 72, 153, 0.22);
-
-  border-radius: 50%;
-
-  background: radial-gradient(
-    circle,
-    rgba(236, 72, 153, 0.035),
-    transparent 68%
-  );
-
-  box-shadow:
-    0 0 45px rgba(236, 72, 153, 0.055),
-    inset 0 0 35px rgba(139, 92, 246, 0.04);
-
-  z-index: 2;
-
-  pointer-events: none;
-}
-
 .drift-callout {
   position: absolute;
-
-  left: 57%;
-  top: 54%;
+  right: 16px;
+  top: 16px;
+  left: auto;
 
   display: flex;
   align-items: center;
   gap: 9px;
 
   padding: 9px 11px;
-
   border: 1px solid rgba(249, 115, 22, 0.18);
-
   background: rgba(7, 7, 10, 0.88);
-
   backdrop-filter: blur(12px);
-
   z-index: 6;
 }
 

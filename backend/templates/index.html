@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Incremental Calibration-Reactive Recompilation — local prototype</title>
+<style>
+  :root {
+    --bg: #14171a;
+    --panel: #1b1f23;
+    --panel-raised: #21262b;
+    --border: #2a3036;
+    --text: #e7eaed;
+    --text-dim: #93a0ab;
+    --accent: #3fa66b;
+    --accent-dim: #2c7a4f;
+    --warn: #e0793c;
+    --bad: #b5504a;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.5;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  header { margin-bottom: 32px; }
+  .kicker {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-size: 27px;
+    font-weight: 650;
+    margin: 0 0 10px;
+    letter-spacing: -0.01em;
+    max-width: 640px;
+  }
+  header p {
+    color: var(--text-dim);
+    max-width: 620px;
+    font-size: 15px;
+    margin: 0;
+  }
+  header p code { font-family: var(--mono); font-size: 13px; background: var(--panel-raised); padding: 1px 5px; border-radius: 3px; }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin-bottom: 20px;
+  }
+  .panel h2 {
+    font-size: 13px;
+    text-transform: none;
+    color: var(--text-dim);
+    font-family: var(--mono);
+    margin: 0 0 16px;
+    font-weight: 500;
+  }
+
+  .controls {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    align-items: end;
+  }
+  @media (max-width: 760px) { .controls { grid-template-columns: repeat(2, 1fr); } }
+  .field label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+  .field input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+  .field input:focus { outline: none; border-color: var(--accent-dim); }
+
+  button.run {
+    grid-column: span 5;
+    margin-top: 4px;
+    background: var(--accent);
+    color: #06140d;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 18px;
+    font-size: 14.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  @media (max-width: 760px) { button.run { grid-column: span 2; } }
+  button.run:hover { background: #4fbb7c; }
+  button.run:disabled { background: var(--border); color: var(--text-dim); cursor: default; }
+
+  .status { font-family: var(--mono); font-size: 12.5px; color: var(--text-dim); margin-top: 12px; min-height: 18px; }
+
+  .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 760px) { .summary-grid { grid-template-columns: 1fr; } }
+  .strategy-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    background: var(--panel-raised);
+  }
+  .strategy-card.hl { border-color: var(--accent-dim); box-shadow: 0 0 0 1px var(--accent-dim) inset; }
+  .strategy-card h3 {
+    font-size: 13.5px;
+    margin: 0 0 12px;
+    font-weight: 600;
+  }
+  .metric-row { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; color: var(--text-dim); }
+  .metric-row span.v { color: var(--text); font-family: var(--mono); }
+
+  .charts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 4px; }
+  @media (max-width: 760px) { .charts-grid { grid-template-columns: 1fr; } }
+  .charts-grid img { width: 100%; border-radius: 6px; background: #fff; }
+
+  .eq-banner {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--mono); font-size: 13px;
+    padding: 12px 14px; border-radius: 8px;
+    background: var(--panel-raised); border: 1px solid var(--border);
+    margin-top: 16px;
+  }
+  .eq-banner .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex: none; }
+
+  pre.log {
+    background: #0e1113;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: #9fe6b8;
+    max-height: 300px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    margin: 0;
+  }
+  pre.log .fallback { color: var(--warn); }
+
+  .example-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 760px) { .example-grid { grid-template-columns: 1fr; } }
+  .example-grid figure { margin: 0; }
+  .example-grid img { width: 100%; border-radius: 6px; background: #fff; }
+  .example-grid figcaption { font-family: var(--mono); font-size: 12px; color: var(--text-dim); margin-top: 6px; }
+
+  .empty-note { color: var(--text-dim); font-size: 13.5px; }
+  footer { color: var(--text-dim); font-size: 12px; font-family: var(--mono); margin-top: 36px; }
+  footer a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">BCSE307P — Compiler Design Lab — local prototype</div>
+    <h1>Incremental Calibration-Reactive Recompilation</h1>
+    <p>
+      This runs the real pipeline: an actual Qiskit circuit, a custom
+      <code>TransformationPass</code> that localizes and rewrites only the
+      drifted region, a real correctness check gating every rewrite, and
+      real noisy simulation for fidelity. Nothing below is precomputed —
+      click Run to execute it live, right now, on this machine.
+    </p>
+  </header>
+
+  <div class="panel">
+    <h2>configure_run()</h2>
+    <div class="controls">
+      <div class="field"><label>Logical qubits</label><input type="number" id="n_log" value="4" min="3" max="5"></div>
+      <div class="field"><label>Physical qubits</label><input type="number" id="n_phys" value="8" min="6" max="10"></div>
+      <div class="field"><label>Drift steps</label><input type="number" id="n_steps" value="15" min="5" max="30"></div>
+      <div class="field"><label>Drift threshold</label><input type="number" id="threshold" value="0.35" min="0.1" max="0.6" step="0.05"></div>
+      <div class="field"><label>Seed</label><input type="number" id="seed" value="11" min="0" max="999"></div>
+      <button class="run" id="runBtn">Run live comparison</button>
+    </div>
+    <div class="status" id="status"></div>
+  </div>
+
+  <div class="panel" id="resultsPanel" style="display:none;">
+    <h2>results</h2>
+    <div class="summary-grid" id="summaryGrid"></div>
+    <div class="charts-grid" id="chartsGrid" style="margin-top:18px;"></div>
+    <div class="eq-banner" id="eqBanner"></div>
+  </div>
+
+  <div class="panel" id="logPanel" style="display:none;">
+    <h2>compiler log — drift detection &amp; rewrite events</h2>
+    <pre class="log" id="logOutput"></pre>
+  </div>
+
+  <div class="panel" id="examplePanel" style="display:none;">
+    <h2>example: one localized rewrite, before / after</h2>
+    <div class="example-grid" id="exampleGrid"></div>
+  </div>
+
+  <div class="panel">
+    <h2>logical test circuit</h2>
+    <div id="circuitHolder" class="empty-note">Run the comparison to render the circuit used for this configuration.</div>
+  </div>
+
+  <footer>
+    quantum_engine.py — real Qiskit + qiskit-aer, no network access required · run again with different seeds to see different drift traces
+  </footer>
+</div>
+
+<script>
+const runBtn = document.getElementById('runBtn');
+const statusEl = document.getElementById('status');
+
+function metricRow(label, value) {
+  return `<div class="metric-row"><span>${label}</span><span class="v">${value}</span></div>`;
+}
+
+function renderSummary(summary) {
+  const order = [['static','Static'], ['full','Full Retranspile'], ['incremental','Incremental (this work)']];
+  const grid = document.getElementById('summaryGrid');
+  grid.innerHTML = order.map(([key, label]) => {
+    const s = summary[key];
+    const hl = key === 'incremental' ? ' hl' : '';
+    return `<div class="strategy-card${hl}">
+      <h3>${label}</h3>
+      ${metricRow('Mean fidelity', s.mean_fidelity.toFixed(4))}
+      ${metricRow('Total recompute cost', s.total_cost)}
+      ${metricRow('Recompiles', s.num_recompiles)}
+      ${metricRow('Gini (usage)', s.gini_usage.toFixed(4))}
+    </div>`;
+  }).join('');
+}
+
+function renderCharts(charts) {
+  const grid = document.getElementById('chartsGrid');
+  grid.innerHTML = ['fidelity','cost','gini'].map(k =>
+    `<img src="data:image/png;base64,${charts[k]}" alt="${k} chart">`
+  ).join('');
+}
+
+function renderLog(log) {
+  const out = document.getElementById('logOutput');
+  out.innerHTML = log.map(line => {
+    const cls = line.includes('fallback') || line.includes('FAILED') ? 'fallback' : '';
+    return `<span class="${cls}">${line.replace(/</g,'&lt;')}</span>`;
+  }).join('\n') || '(no drift crossed the threshold during this run — try more steps or a lower threshold)';
+  document.getElementById('logPanel').style.display = 'block';
+}
+
+function renderExample(example) {
+  const panel = document.getElementById('examplePanel');
+  if (!example) { panel.style.display = 'none'; return; }
+  panel.style.display = 'block';
+  document.getElementById('exampleGrid').innerHTML = `
+    <figure>
+      <img src="data:image/png;base64,${example.before_png}" alt="before rewrite">
+      <figcaption>Before — drift detected on physical qubit(s) ${JSON.stringify(example.drifted_phys)}</figcaption>
+    </figure>
+    <figure>
+      <img src="data:image/png;base64,${example.after_png}" alt="after rewrite">
+      <figcaption>After — localized rewrite over region ${JSON.stringify(example.region)}, verified equivalent</figcaption>
+    </figure>`;
+}
+
+function renderEqBanner(eq) {
+  const total = eq.passed + eq.failed_fallback;
+  const el = document.getElementById('eqBanner');
+  if (total === 0) {
+    el.innerHTML = `<span class="dot"></span> No drift-triggered rewrites occurred in this run.`;
+    return;
+  }
+  el.innerHTML = `<span class="dot"></span> Equivalence check: ${eq.passed}/${total} rewrites accepted as verified-correct` +
+    (eq.failed_fallback > 0 ? `, ${eq.failed_fallback} rejected and safely fell back to full retranspile.` : '.');
+}
+
+async function run() {
+  runBtn.disabled = true;
+  statusEl.textContent = 'compiling initial layout, stepping through drift trace, verifying each rewrite…';
+  const cfg = {
+    n_log: parseInt(document.getElementById('n_log').value, 10),
+    n_phys: parseInt(document.getElementById('n_phys').value, 10),
+    n_steps: parseInt(document.getElementById('n_steps').value, 10),
+    threshold: parseFloat(document.getElementById('threshold').value),
+    seed: parseInt(document.getElementById('seed').value, 10),
+  };
+  try {
+    const res = await fetch('/api/run', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(cfg),
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'run failed');
+
+    document.getElementById('resultsPanel').style.display = 'block';
+    renderSummary(data.summary);
+    renderCharts(data.charts);
+    renderEqBanner(data.equivalence);
+    renderLog(data.log);
+    renderExample(data.example);
+    document.getElementById('circuitHolder').innerHTML =
+      `<img src="data:image/png;base64,${data.circuit_png}" style="max-width:100%;background:#fff;border-radius:6px;" alt="logical circuit">`;
+
+    statusEl.textContent = `done — ${data.config.n_steps} drift steps over ${data.config.n_phys} physical qubits, seed ${data.config.seed}.`;
+  } catch (err) {
+    statusEl.textContent = 'error: ' + err.message;
+  } finally {
+    runBtn.disabled = false;
+  }
+}
+
+runBtn.addEventListener('click', run);
+</script>
+</body>
+</html>
